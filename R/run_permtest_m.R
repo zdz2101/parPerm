@@ -1,3 +1,16 @@
+#' Run permutation test using parallel processing
+#' 
+#' @param x.mat the desired x matrix that was preprocessed containing all the characteristics
+#' @param y the desired preprocessed neuroimaging data 
+#' @param columns which characteristic/predictor we want analyzed, for multiple categories select the columns containing the binary indicators
+#' @split how finely you want the processing split to allow for error checking as well
+#' @num_perms number of permutations we want to run
+#' @return the desired permutation result
+#' 
+#' a <- run_permtest(x.mat = xtx, y = ymat, columns = 2:3, split = 101, num_perms = 100)
+
+
+
 #Issues to address:
 # - which x/y matrix columns to permute, how many
 # - how to split the dataset for error checking

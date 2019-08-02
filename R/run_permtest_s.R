@@ -1,7 +1,24 @@
+#' Run permutation test using parallel processing
+#' 
+#' @param x.mat the desired x matrix that was preprocessed containing all the characteristics
+#' @param y the desired preprocessed neuroimaging data 
+#' @param columns which characteristic/predictor we want analyzed 
+#' @split how finely you want the processing split to allow for error checking as well
+#' @num_perms number of permutations we want to run
+#' @return the desired permutation result
+#' 
+#' a <- run_permtest(x.mat = xtx, y = ymat, columns = 1, split = 101, num_perms = 100)
+
+
+
 run_permtest <-function(x.mat = xtx, y = ymat, columns = 1, split = 101, num_perms = 100){
   cores=detectCores()
   cl <- makeCluster(cores[1]-1) #not to overload your computer
   registerDoParallel(cl)
+  
+  if(length(columns) != 1){
+    return("Use rum_permtest_multicat for predictors with multiple categories")
+  }
   
   #Split the data into the number of pieces to address issues on a chunk based level, not necessary, but suggested
   vindx = rep(1:split, each = floor(nrow(ymat)/(split - 1)))[1:nrow(ymat)]
