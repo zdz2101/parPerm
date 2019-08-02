@@ -2,12 +2,25 @@ Package: parPerm
 Type: Package
 Title: How to perform permutation tests on neuroimaging data
 Version: 0.1.0
-Author: Who wrote it
-Maintainer: The package maintainer <yourself@somewhere.net>
+Authors@R: person("Zelos", "Zhu", email = "zdz2101@cumc.columbia.edu", role = c("aut", "cre"))
 Description: More about what it does (maybe more than one line)
     This package is to demonstrate the using of parallel processing to perform permutations tests of neuroimaging data. 
-    use library(packagedown)
-License: What license is it under?
+License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 6.1.1
+Imports:
+  parallel,
+  oro.nifti,
+  slmisc,
+  psych,
+  parallel,
+  doParallel,
+  foreach,
+  iterators,
+  knitr,
+  MASS
+Suggests: 
+  tidyverse,
+  readxl
+VignetteBuilder: knitr
