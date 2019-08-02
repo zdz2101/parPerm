@@ -1,3 +1,12 @@
+#' Preprocess y matrix data, while double checking all data is nifti
+#' 
+#' @param gmvol the desired nifti dataset we want analyzed
+#' @param mask if we are using a mask because data is too large
+#' @param mask_logical an indicator whether of not we are using a mask
+#' @return a processed matrix ready for permutation test analysis
+#' 
+#' ymat <- ymat_trans(gmvol, mask, mask_logical = TRUE)
+
 #Problems: what is mask == 1 for>
 ymat_trans <- function(gmvol, mask, mask_logical = FALSE){
 
