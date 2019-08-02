@@ -22,5 +22,6 @@ Imports:
   MASS
 Suggests: 
   tidyverse,
-  readxl
+  readxl,
+  rmarkdown
 VignetteBuilder: knitr
