@@ -6,7 +6,7 @@
 #' ymat <- ymat_trans(neurodat)
 
 #Problems: what is mask == 1 for>
-ymat_trans <- function(neurodat, mask, mask_logical = FALSE){
+ymat_trans <- function(neurodat){
   
     #Check to see if files are NIFTI
     if(class(neurodat)[1] != "nifti"){

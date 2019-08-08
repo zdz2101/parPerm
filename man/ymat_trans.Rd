@@ -4,7 +4,7 @@
 \alias{ymat_trans}
 \title{Preprocess y matrix data, while double checking all data is nifti}
 \usage{
-ymat_trans(neurodat, mask, mask_logical = FALSE)
+ymat_trans(neurodat)
 }
 \arguments{
 \item{neurodat}{The desired nifti dataset we want analyzed}
