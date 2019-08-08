@@ -13,6 +13,10 @@ run_permtest(x.mat = xtx, y = ymat, columns = 1, split = 101,
 \item{y}{The desired preprocessed neuroimaging data, with a mask or not.}
 
 \item{columns}{A numeric value indicating which characteristic/predictor we want analyzed. User inputs the column number they want permuted.}
+
+\item{split}{A value that allows user to finely split the processing task to allow for error checking.}
+
+\item{num_perms}{User defined value for number of desired permutations}
 }
 \value{
 The desired permutation result

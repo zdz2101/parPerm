@@ -3,8 +3,8 @@
 #' @param x.mat The desired x matrix that contains all the characteristics data/predictor variables; the matrix should contain the desired column user intends completing the permutation on.
 #' @param y The desired preprocessed neuroimaging data, with a mask or not.
 #' @param columns A numeric value indicating which characteristic/predictor we want analyzed. User inputs the column number they want permuted. 
-#' @split A value that allows user to finely split the processing task to allow for error checking.
-#' @num_perms User defined value for number of desired permutations 
+#' @param split A value that allows user to finely split the processing task to allow for error checking.
+#' @param num_perms User defined value for number of desired permutations 
 #' @return The desired permutation result
 #' 
 #' The following three lines of code are necessary for the parallel processing to work, can be changed to user's discretion but this is a known safe method.

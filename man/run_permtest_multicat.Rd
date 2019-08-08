@@ -13,6 +13,10 @@ run_permtest_multicat(x.mat = xtx, y = ymat, columns = 2:3,
 \item{y}{The desired preprocessed neuroimaging data, with a mask or not.}
 
 \item{columns}{A statement indicating which characteristic/predictor we want analyzed, for multiple categories select the proper columns}
+
+\item{split}{A value that allows user to finely split the processing task to allow for error checking.}
+
+\item{num_perms}{User defined value for number of desired permutations}
 }
 \value{
 The desired permutation result
