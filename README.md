@@ -1,2 +1,11 @@
-# parPerm
-initialize github repo
+
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+Installation
+------------
+
+Installation directions
+
+Usage
+-----
+
+Show an example of the package and its workings
