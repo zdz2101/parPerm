@@ -2,7 +2,7 @@
 % Please edit documentation in R/preproc_y_mask.R
 \name{ymat_trans_mask}
 \alias{ymat_trans_mask}
-\title{Preprocess y matrix data, while double checking all data is nifti}
+\title{Preprocess y matrix data if user includes a masking file, while double checking all data is nifti}
 \usage{
 ymat_trans_mask(neurodat, mask)
 }
@@ -17,5 +17,5 @@ A processed matrix ready for permutation test analysis
 ymat <- ymat_trans(neurodat, mask, mask_logical = TRUE)
 }
 \description{
-Preprocess y matrix data, while double checking all data is nifti
+Preprocess y matrix data if user includes a masking file, while double checking all data is nifti
 }

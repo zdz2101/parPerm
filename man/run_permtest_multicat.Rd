@@ -2,7 +2,7 @@
 % Please edit documentation in R/run_permtest_m.R
 \name{run_permtest_multicat}
 \alias{run_permtest_multicat}
-\title{Run permutation test using parallel processing}
+\title{Run permutation test using parallel processing, for predictor variabbles containing multiple (3+ categories)}
 \usage{
 run_permtest_multicat(x.mat = xtx, y = ymat, columns = 2:3,
   split = 101, num_perms = 100)
@@ -31,5 +31,5 @@ registerDoParallel(cl)
 a <- run_permtest(x.mat = xtx, y = ymat, columns = 1, split = 101, num_perms = 100)
 }
 \description{
-Run permutation test using parallel processing
+Run permutation test using parallel processing, for predictor variabbles containing multiple (3+ categories)
 }

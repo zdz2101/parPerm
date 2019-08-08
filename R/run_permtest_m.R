@@ -1,4 +1,4 @@
-#' Run permutation test using parallel processing
+#' Run permutation test using parallel processing, for predictor variabbles containing multiple (3+ categories)
 #' 
 #' @param x.mat The desired x matrix that contains all the characteristics data/predictor variables; the matrix should contain the desired column user intends completing the permutation on.
 #' @param y The desired preprocessed neuroimaging data, with a mask or not.

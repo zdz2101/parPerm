@@ -1,4 +1,4 @@
-#' Preprocess y matrix data, while double checking all data is nifti
+#' Preprocess y matrix data if user includes a masking file, while double checking all data is nifti
 #' 
 #' @param neurodat The desired nifti dataset we want analyzed
 #' @param mask User provided mask
