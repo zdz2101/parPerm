@@ -1,8 +1,8 @@
 #' Run permutation test using parallel processing
 #' 
-#' @param x.mat the desired x matrix that was preprocessed containing all the characteristics
-#' @param y the desired preprocessed neuroimaging data 
-#' @param columns which characteristic/predictor we want analyzed, for multiple categories select the columns containing the binary indicators
+#' @param x.mat The desired x matrix that contains all the characteristics data/predictor variables; the matrix should contain the desired column user intends completing the permutation on.
+#' @param y The desired preprocessed neuroimaging data, with a mask or not.
+#' @param columns A statement indicating which characteristic/predictor we want analyzed, for multiple categories select the columns containing the binary indicators
 #' @split how finely you want the processing split to allow for error checking as well
 #' @num_perms number of permutations we want to run
 #' @return the desired permutation result
@@ -35,30 +35,20 @@ run_permtest_multicat<-function(x.mat = xtx, y = ymat, columns = 2:3, split = 10
   bhat = y %*% x.mat[,columns]
 
   rr1 <- foreach(i = 1:split, .combine = rbind, .packages="foreach") %dopar%{
-    #num_perm - how many seeds
-    perm_stack = foreach(j = 1:num_perms, .packages="foreach") %do% {
+      perm_stack = foreach(j = 1:num_perms, .packages="foreach") %do% {
       set.seed(j)
       n = nrow(x.mat)
       indx = sample(n,n,replace=FALSE)
       perms = y[vindx==i,] %*% x.mat[indx, columns]
     }
 
-    aa1 = do.call(rbind, lapply(perm_stack,function(x)x[,1]))
+    aa1 = do.call(rbind, lapply(perm_stack, function(x)x[,1]))
     ps1 = apply(rbind(bhat[vindx==i,1], aa1),2, function(x)sum( x[-1]> abs(x[1]) |  x[-1]< (-1*abs(x[1])) ))/100
 
-    aa2 = do.call(rbind, lapply(perm_stack,function(x)x[,2]))
+    aa2 = do.call(rbind, lapply(perm_stack, function(x)x[,2]))
     ps2 = apply(rbind(bhat[vindx==i,2], aa2),2, function(x)sum( x[-1]> abs(x[1]) |  x[-1]< (-1*abs(x[1])) ))/100
 
     rr1_piece = cbind(unlist(ps1),unlist(ps2))
     rr1_piece
-    
-    #work in progress
-    # rr1_piece <- matrix(ncol = length(columns))
-    # for(k in 1:length(columns)){
-    #   aa_k = do.call(rbind, lapply(perm_stack,function(x)x[,k]))
-    #   ps_k = apply(rbind(bhat[vindx==i, k], aa_k), 2, function(x)sum( x[-1]> abs(x[1]) |  x[-1]< (-1*abs(x[1])) ))/100
-    #   rr1_piece[,k] <- unlist(ps_k)
-    # }
-    # rr1_piece
   }
 }

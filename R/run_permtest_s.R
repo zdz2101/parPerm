@@ -1,21 +1,24 @@
 #' Run permutation test using parallel processing
 #' 
-#' @param x.mat the desired x matrix that was preprocessed containing all the characteristics
-#' @param y the desired preprocessed neuroimaging data 
-#' @param columns which characteristic/predictor we want analyzed 
-#' @split how finely you want the processing split to allow for error checking as well
-#' @num_perms number of permutations we want to run
-#' @return the desired permutation result
+#' @param x.mat The desired x matrix that contains all the characteristics data/predictor variables; the matrix should contain the desired column user intends completing the permutation on.
+#' @param y The desired preprocessed neuroimaging data, with a mask or not.
+#' @param columns A numeric value indicating which characteristic/predictor we want analyzed. User inputs the column number they want permuted. 
+#' @split A value that allows user to finely split the processing task to allow for error checking.
+#' @num_perms User defined value for number of desired permutations 
+#' @return The desired permutation result
+#' 
+#' The following three lines of code are necessary for the parallel processing to work, can be changed to user's discretion but this is a known safe method.
+#' ###
+#' cores <- detectCores()
+#' cl <- makeCluster(cores[1]-1) #not to overload your computer
+#' registerDoParallel(cl)
+#' ###
 #' 
 #' a <- run_permtest(x.mat = xtx, y = ymat, columns = 1, split = 101, num_perms = 100)
 
 
-
 run_permtest <-function(x.mat = xtx, y = ymat, columns = 1, split = 101, num_perms = 100){
-  cores=detectCores()
-  cl <- makeCluster(cores[1]-1) #not to overload your computer
-  registerDoParallel(cl)
-  
+
   if(length(columns) != 1){
     return("Use rum_permtest_multicat for predictors with multiple categories")
   }

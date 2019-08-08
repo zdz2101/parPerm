@@ -8,11 +8,11 @@ run_permtest_multicat(x.mat = xtx, y = ymat, columns = 2:3,
   split = 101, num_perms = 100)
 }
 \arguments{
-\item{x.mat}{the desired x matrix that was preprocessed containing all the characteristics}
+\item{x.mat}{The desired x matrix that contains all the characteristics data/predictor variables; the matrix should contain the desired column user intends completing the permutation on.}
 
-\item{y}{the desired preprocessed neuroimaging data}
+\item{y}{The desired preprocessed neuroimaging data, with a mask or not.}
 
-\item{columns}{which characteristic/predictor we want analyzed, for multiple categories select the columns containing the binary indicators}
+\item{columns}{A statement indicating which characteristic/predictor we want analyzed, for multiple categories select the columns containing the binary indicators}
 }
 \value{
 the desired permutation result

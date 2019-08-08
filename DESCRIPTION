@@ -1,10 +1,12 @@
 Package: parPerm
 Type: Package
-Title: How to perform permutation tests on neuroimaging data
+Title: How to perform permutation tests on predictor variales for to study outcomes of neuroimaging data
 Version: 0.1.0
 Authors@R: person("Zelos", "Zhu", email = "zdz2101@cumc.columbia.edu", role = c("aut", "cre"))
 Description: More about what it does (maybe more than one line)
     This package is to demonstrate the using of parallel processing to perform permutations tests of neuroimaging data. 
+    Included in this package, will contain functions that prepare your data for the parallel processing pipeline, both your predictor variable matrix, and outcome variable matrix (the neuroimaging data).
+    Users may choose to run analysis for image data containing masks or not. 
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true

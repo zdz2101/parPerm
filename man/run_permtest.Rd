@@ -8,14 +8,21 @@ run_permtest(x.mat = xtx, y = ymat, columns = 1, split = 101,
   num_perms = 100)
 }
 \arguments{
-\item{x.mat}{the desired x matrix that was preprocessed containing all the characteristics}
+\item{x.mat}{The desired x matrix that contains all the characteristics data/predictor variables; the matrix should contain the desired column user intends completing the permutation on.}
 
-\item{y}{the desired preprocessed neuroimaging data}
+\item{y}{The desired preprocessed neuroimaging data, with a mask or not.}
 
-\item{columns}{which characteristic/predictor we want analyzed}
+\item{columns}{A numeric value indicating which characteristic/predictor we want analyzed. User inputs the column number they want permuted.}
 }
 \value{
-the desired permutation result
+The desired permutation result
+
+The following three lines of code are necessary for the parallel processing to work, can be changed to user's discretion but this is a known safe method.
+###
+cores <- detectCores()
+cl <- makeCluster(cores[1]-1) #not to overload your computer
+registerDoParallel(cl)
+###
 
 a <- run_permtest(x.mat = xtx, y = ymat, columns = 1, split = 101, num_perms = 100)
 }
