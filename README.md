@@ -3,7 +3,12 @@
 Installation
 ------------
 
-Installation directions
+Installation directions for development version
+
+``` r
+# install.packages("devtools")
+devtools::install_github("zdz2101/parPerm")
+```
 
 Usage
 -----

@@ -5,7 +5,11 @@ output: github_document
 
 ## Installation
 
-Installation directions
+Installation directions for development version
+```{r, eval = FALSE}
+# install.packages("devtools")
+devtools::install_github("zdz2101/parPerm")
+```
 
 
 ## Usage
