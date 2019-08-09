@@ -35,10 +35,10 @@ run_permtest_multicat<-function(x.mat = xtx, y = ymat, columns = 2:3, split = 10
     
     #------ THIS DEFINITELY WORKS ------
     # aa1 = do.call(rbind, lapply(perm_stack, function(x)x[,1]))
-    # ps1 = apply(rbind(bhat[vindx==i,1], aa1),2, function(x)sum( x[-1]> abs(x[1]) |  x[-1]< (-1*abs(x[1])) ))/100
+    # ps1 = apply(rbind(bhat[vindx==i,1], aa1),2, function(x)sum( x[-1]> abs(x[1]) |  x[-1]< (-1*abs(x[1])) ))/num_perms
     # 
     # aa2 = do.call(rbind, lapply(perm_stack, function(x)x[,2]))
-    # ps2 = apply(rbind(bhat[vindx==i,2], aa2),2, function(x)sum( x[-1]> abs(x[1]) |  x[-1]< (-1*abs(x[1])) ))/100
+    # ps2 = apply(rbind(bhat[vindx==i,2], aa2),2, function(x)sum( x[-1]> abs(x[1]) |  x[-1]< (-1*abs(x[1])) ))/num_perms
     # 
     # rr1_piece = cbind(unlist(ps1),unlist(ps2))
     # rr1_piece
@@ -46,7 +46,7 @@ run_permtest_multicat<-function(x.mat = xtx, y = ymat, columns = 2:3, split = 10
     
     rr1_piece <- foreach(k = 1:length(columns), .combine = cbind, .packages = "foreach") %do% {
       aa_k <- do.call(rbind, lapply(perm_stack, function(x)x[,k]))
-      ps_k <- unlist(apply(rbind(bhat[vindx==i, k], aa_k),2, function(x)sum( x[-1]> abs(x[1]) |  x[-1]< (-1*abs(x[1])) ))/100)
+      ps_k <- unlist(apply(rbind(bhat[vindx==i, k], aa_k),2, function(x)sum( x[-1]> abs(x[1]) |  x[-1]< (-1*abs(x[1])) ))/num_perms)
     }
   }
 }
