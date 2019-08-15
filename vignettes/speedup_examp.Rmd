@@ -20,14 +20,14 @@ library(parPerm)
 
 ###Cleanup our outcome data
 ```{r, warning = FALSE, message = FALSE}
-gmvol<-readNIfTI('../../../neuroimaging/4d6mmnew.nii.gz')
-mask<-readNIfTI('../../../neuroimaging/vol0000.nii.gz')
+gmvol<-readNIfTI('../../neuroimaging/4d6mmnew.nii.gz')
+mask<-readNIfTI('../../neuroimaging/vol0000.nii.gz')
 ymat <- ymat_trans_mask(neurodat = gmvol, mask = mask)
 ```
 
 ###Cleanup our predictor variables
 ```{r, warning = FALSE, message = FALSE}
-xmat <- data.frame(read_excel('../../../neuroimaging/VMB Variables.xlsx',skip=1))
+xmat <- data.frame(read_excel('../../neuroimaging/VMB Variables.xlsx',skip=1))
 xtx <- xmat_trans(xmat)
 ```
 
