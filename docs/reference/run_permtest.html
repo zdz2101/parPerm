@@ -136,13 +136,6 @@
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
     <p>The desired permutation result</p>
-<p>The following three lines of code are necessary for the parallel processing to work, can be changed to user's discretion but this is a known safe method.
-###
-cores &lt;- detectCores()
-cl &lt;- makeCluster(cores[1]-1) #not to overload your computer
-registerDoParallel(cl)
-###</p>
-<p>a &lt;- run_permtest(x.mat = xtx, y = ymat, columns = 1, split = 101, num_perms = 100)</p>
     
 
   </div>

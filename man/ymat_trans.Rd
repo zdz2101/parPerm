@@ -11,9 +11,10 @@ ymat_trans(neurodat)
 }
 \value{
 A processed matrix ready for permutation test analysis
-
-ymat <- ymat_trans(neurodat)
 }
 \description{
 Preprocess y matrix data, while double checking all data is nifti
+}
+\examples{
+#' ymat <- ymat_trans(neurodat)
 }

@@ -7,6 +7,7 @@
 #' @param num_perms User defined value for number of desired permutations 
 #' @return The desired permutation result
 #' 
+#' @examples
 #' The following three lines of code are necessary for the parallel processing to work, can be changed to user's discretion but this is a known safe method.
 #' ###
 #' cores <- detectCores()

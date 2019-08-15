@@ -1,0 +1,81 @@
+---
+title: "Comparing mclapply vs foreach"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{comparing_methods}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+```{r, echo = FALSE, message = FALSE, warning = FALSE}
+#load libraries
+library(parallel)
+library(tidyverse)
+library(readxl)
+library(oro.nifti)
+library(doParallel)
+library(foreach)
+library(knitr)
+library(parPerm)
+```
+
+###Cleanup our outcome data
+```{r, warning = FALSE, message = FALSE}
+gmvol<-readNIfTI('../../../neuroimaging/4d6mmnew.nii.gz')
+mask<-readNIfTI('../../../neuroimaging/vol0000.nii.gz')
+ymat <- ymat_trans_mask(neurodat = gmvol, mask = mask)
+```
+
+###Cleanup our predictor variables
+```{r, warning = FALSE, message = FALSE}
+xmat <- data.frame(read_excel('../../../neuroimaging/VMB Variables.xlsx',skip=1))
+xtx <- xmat_trans(xmat)
+```
+
+###Comparing Permutation test between mclapply vs foreach
+```{r, warning = FALSE, message = FALSE}
+permtest.oneunit<-function(xmat=xtx,y=ymat,seed=1234){
+  set.seed(seed)
+  n=nrow(xtx)
+  indx=sample(n,n,replace=FALSE)
+  bhat<- y %*% xmat[indx, 2:3] #####-----why only second and third column (groups), test the beta coefficient of the groups
+  return(bhat)
+}
+
+run_pertest<-function(x.mat=xtx,y=ymat){
+  
+  vindx=rep(1:101,each=floor(nrow(ymat)/100))[1:nrow(ymat)]
+  
+  bhat = y %*% x.mat[,2:3]
+  
+  rr1=lapply(1:101, function(k){
+    perms<-mclapply(1:100,function(seednum){permtest.oneunit(xmat=xtx,seed=seednum,y=y[vindx ==k,])},mc.cores=8)
+    aa1=do.call(rbind,lapply(perms,function(x)x[,1]))
+    ps1=apply(rbind(bhat[vindx==k,1],aa1),2, function(x)sum( x[-1]> abs(x[1]) |  x[-1]< (-1*abs(x[1])) ))/100
+    
+    aa2=do.call(rbind,lapply(perms,function(x)x[,2]))
+    ps2=apply(rbind(bhat[vindx==k,2],aa2),2, function(x)sum( x[-1]> abs(x[1]) |  x[-1]< (-1*abs(x[1])) ))/100
+ 
+    return(cbind(unlist(ps1),unlist(ps2)))})
+  
+  return(do.call(rbind,rr1))
+}
+```
+
+###Runtime using mclapply
+```{r}
+system.time(run1 <- run_pertest(x.mat=xtx,y=ymat))
+```
+
+###Runtime using foreach
+```{r}
+cl <- makeCluster(8)
+registerDoParallel(cl)
+system.time(run2 <- run_permtest_multicat(x.mat = xtx, y = ymat, columns = 2:3, split = 101, num_perms = 100))
+```
+
+###Verifying same results
+```{r}
+print(cbind(head(run1), head(run2)))
+```
+
+As we can see, by utilizing a foreach structure, built into the run_permtest_culticat function from this package, rather than that of one that relies on mclapply, we have cut around 20% of runtime for permutation test calculations. Performance may vary depending on operating system (this was done on macOS). 

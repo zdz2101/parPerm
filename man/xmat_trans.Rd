@@ -11,10 +11,11 @@ xmat_trans(xmat)
 }
 \value{
 The x-matrix multiplication we desire
-
-xmat <- read_excel('VMB Variables.xlsx',skip=1)
-xtx <- xmat_trans(xmat)
 }
 \description{
 Preprocess x matrix data
+}
+\examples{
+xmat <- read_excel('VMB Variables.xlsx',skip=1)
+xtx <- xmat_trans(xmat)
 }

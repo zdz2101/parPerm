@@ -13,9 +13,10 @@ ymat_trans_mask(neurodat, mask)
 }
 \value{
 A processed matrix ready for permutation test analysis
-
-ymat <- ymat_trans(neurodat, mask, mask_logical = TRUE)
 }
 \description{
 Preprocess y matrix data if user includes a masking file, while double checking all data is nifti
+}
+\examples{
+ymat <- ymat_trans(neurodat, mask, mask_logical = TRUE)
 }

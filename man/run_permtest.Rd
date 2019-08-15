@@ -20,15 +20,6 @@ run_permtest(x.mat = xtx, y = ymat, columns = 1, split = 101,
 }
 \value{
 The desired permutation result
-
-The following three lines of code are necessary for the parallel processing to work, can be changed to user's discretion but this is a known safe method.
-###
-cores <- detectCores()
-cl <- makeCluster(cores[1]-1) #not to overload your computer
-registerDoParallel(cl)
-###
-
-a <- run_permtest(x.mat = xtx, y = ymat, columns = 1, split = 101, num_perms = 100)
 }
 \description{
 Run permutation test using parallel processing

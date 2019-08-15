@@ -2,8 +2,8 @@
 #' 
 #' @param neurodat The desired nifti dataset we want analyzed
 #' @return A processed matrix ready for permutation test analysis
-#' 
-#' ymat <- ymat_trans(neurodat)
+#' @examples
+#' #' ymat <- ymat_trans(neurodat)
 
 #Problems: what is mask == 1 for>
 ymat_trans <- function(neurodat){
