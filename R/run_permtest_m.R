@@ -21,7 +21,7 @@
 
 run_permtest_multicat<-function(x.mat = xtx, y = ymat, columns = 2:3, split = 101, num_perms = 100){
   #Split the data into the number of pieces to address issues on a chunk based level, not necessary, but suggested
-  vindx = rep(1:split, each = floor(nrow(ymat)/(split - 1)))[1:nrow(ymat)]
+  vindx = rep(1:split, each = floor(nrow(y)/(split - 1)))[1:nrow(y)]
 
   #Define bhat for the particular characteristic: sex, trt/ctl, age, bmi
   bhat = y %*% x.mat[,columns]
