@@ -7,6 +7,15 @@
 #' @param num_perms User defined value for number of desired permutations 
 #' @param boots Number of desired bootstraps
 #' @return The desired results post-bootstrap
+#' @examples 
+#' #library(parallel)
+#' #lirary(doparallel)
+#' #library(parPerm)
+#' #cores <- detectCores()
+#' #cl <- makeCluster(cores[1]-1) #not to overload your computer
+#' #registerDoParallel(cl)
+#' #boooooot <- parperm_boot(x.mat.boot = xtx, y.boot = ymat, columns.boot = 2:3, split.boot = 101, num_perms.boot = 5, boots = 5)
+
 
 parperm_boot <- function(x.mat.boot = xtx, y.boot = ymat, columns.boot = 2:3, split.boot = 101, num_perms.boot = 5, boots = 5){
   # bootruns <- list()
@@ -19,7 +28,7 @@ parperm_boot <- function(x.mat.boot = xtx, y.boot = ymat, columns.boot = 2:3, sp
   # return(bootruns)
   # 
   
-  ###Need to figure out how to use parallelization here too
+  ###Need to figure out how to use parallelization here too -- this should work
   n = nrow(x.mat.boot)
   straps <- foreach(ll = 1:boots, .packages = c("foreach", "parPerm")) %dopar% {
     set.seed(ll+20190815)
@@ -28,9 +37,4 @@ parperm_boot <- function(x.mat.boot = xtx, y.boot = ymat, columns.boot = 2:3, sp
   }
   return(straps)
 }   
-
-cores <- detectCores()
-cl <- makeCluster(cores[1]-1) #not to overload your computer
-registerDoParallel(cl)
-boooooot <- parperm_boot(x.mat.boot = xtx, y.boot = ymat, columns.boot = 2:3, split.boot = 101, num_perms.boot = 5, boots = 5)
 

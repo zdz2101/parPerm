@@ -128,7 +128,7 @@ run_pertest&lt;-<span class="cf">function</span>(<span class="dt">x.mat=</span>x
 <a href="#runtime-using-mclapply" class="anchor"></a>Runtime using mclapply</h3>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/system.time">system.time</a></span>(run1 &lt;-<span class="st"> </span><span class="kw">run_pertest</span>(<span class="dt">x.mat=</span>xtx,<span class="dt">y=</span>ymat))</code></pre></div>
 <pre><code>##    user  system elapsed 
-##   9.365   5.903  24.984</code></pre>
+##   9.276   5.884  25.543</code></pre>
 </div>
 <div id="runtime-using-foreach" class="section level3">
 <h3 class="hasAnchor">
@@ -137,7 +137,7 @@ run_pertest&lt;-<span class="cf">function</span>(<span class="dt">x.mat=</span>x
 <span class="kw">registerDoParallel</span>(cl)
 <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/system.time">system.time</a></span>(run2 &lt;-<span class="st"> </span><span class="kw"><a href="../reference/run_permtest_multicat.html">run_permtest_multicat</a></span>(<span class="dt">x.mat =</span> xtx, <span class="dt">y =</span> ymat, <span class="dt">columns =</span> <span class="dv">2</span><span class="op">:</span><span class="dv">3</span>, <span class="dt">split =</span> <span class="dv">101</span>, <span class="dt">num_perms =</span> <span class="dv">100</span>))</code></pre></div>
 <pre><code>##    user  system elapsed 
-##   4.748   0.401  20.900</code></pre>
+##   4.805   0.408  21.810</code></pre>
 </div>
 <div id="verifying-same-results" class="section level3">
 <h3 class="hasAnchor">

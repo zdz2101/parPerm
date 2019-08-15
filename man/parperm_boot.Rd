@@ -4,10 +4,12 @@
 \alias{parperm_boot}
 \title{Bootstrapping using parPerm}
 \usage{
-parperm_boot(x.mat = xtx, y = ymat, columns = 2:3, split = 101,
-  num_perms = 100, boots = 10)
+parperm_boot(x.mat.boot = xtx, y.boot = ymat, columns.boot = 2:3,
+  split.boot = 101, num_perms.boot = 5, boots = 5)
 }
 \arguments{
+\item{boots}{Number of desired bootstraps}
+
 \item{x.mat}{The desired x matrix that contains all the characteristics data/predictor variables; the matrix should contain the desired column user intends completing the permutation on.}
 
 \item{y}{The desired preprocessed neuroimaging data, with a mask or not.}
@@ -17,12 +19,19 @@ parperm_boot(x.mat = xtx, y = ymat, columns = 2:3, split = 101,
 \item{split}{A value that allows user to finely split the processing task to allow for error checking.}
 
 \item{num_perms}{User defined value for number of desired permutations}
-
-\item{boots}{Number of desired bootstraps}
 }
 \value{
 The desired results post-bootstrap
 }
 \description{
 Bootstrapping using parPerm
+}
+\examples{
+#library(parallel)
+#lirary(doparallel)
+#library(parPerm)
+#cores <- detectCores()
+#cl <- makeCluster(cores[1]-1) #not to overload your computer
+#registerDoParallel(cl)
+#boooooot <- parperm_boot(x.mat.boot = xtx, y.boot = ymat, columns.boot = 2:3, split.boot = 101, num_perms.boot = 5, boots = 5)
 }

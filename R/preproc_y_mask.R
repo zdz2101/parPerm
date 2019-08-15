@@ -4,7 +4,7 @@
 #' @param mask User provided mask
 #' @return A processed matrix ready for permutation test analysis
 #' @examples
-#' ymat <- ymat_trans(neurodat, mask, mask_logical = TRUE)
+#' # ymat <- ymat_trans(neurodat, mask, mask_logical = TRUE)
 
 #Problems: what is mask == 1 for>
 ymat_trans_mask <- function(neurodat, mask){
