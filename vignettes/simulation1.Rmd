@@ -1,0 +1,63 @@
+---
+title: "Simulation1"
+author: "Zelos Zhu"
+date: "10/3/2019"
+output: html_document
+---
+#Simulation 1:
+ - Three-group permutation test
+ - n=120 (40 per group)
+ - effect size = (0, 0.5, 0.8), effect size (0, 0, 8)
+ - Number of voxels: 10 x 10 x 4
+ - Significant area size: 2 x 2 x 1
+ - Multiple comparison correction (p.adjust, method=BH)
+ - Report false discovery rates. 
+ - Random samples: 10,20,100
+ - Permuting numbers: 1000 vs 10,000
+
+```{r, include = FALSE}
+library(tidyverse)
+library(parPerm)
+library(doParallel)
+library(knitr)
+```
+
+```{Create Dataset}
+img.dim <- c(10,10,4)
+n <- 120
+set.seed(1)
+voxel_data <- array(rnorm(prod(img.dim)*n),dim=c(img.dim,n))
+
+#Create dataset with effect size (0, 0, 0.8)
+voxel_data_set1 <- voxel_data
+voxel_data_set1[4:5,4:5,3,81:120] <- voxel_data_set1[4:5,4:5,3,81:120] + 0.8
+
+lapply(1:80, function(x) mean(voxel_data_set1[4:5,4:5,3,x])) %>% unlist() %>% mean
+lapply(81:120, function(x) mean(voxel_data_set1[4:5,4:5,3,x])) %>% unlist() %>% mean
+```
+
+```{Using Randomise}
+#Look-up FSL implentation in R
+cov_mat_randomise <- rep(1:3, rep(40,3)) %>% as.factor 
+```
+
+```{Using parPerm}
+cov_mat_parperm <- cbind(rep(c(0,1,0),c(40,40,40)), rep(c(0,0,1),c(40,40,40)))
+xtx <- xmat_trans(cov_mat_parperm)
+
+#Dataset1
+ymat_set1 <- array(voxel_data_set1, dim=c(400,120))
+cores <- detectCores()
+cl <- makeCluster(cores[1]-1)
+registerDoParallel(cl)
+result_1000_set1 <- run_permtest_multicat(x.mat = xtx, y = ymat_set1, columns = 1:2, split = 2, num_perms = 1000)
+result_10000_set1 <- run_permtest_multicat(x.mat = xtx, y = ymat_set1, columns = 1:2, split = 2, num_perms = 10000)
+
+quick_df <- cbind(result_1000_set1, result_10000_set1) %>% as.data.frame()
+names(quick_df) <- c("Set1000_B0", "Set1000_B1", "Set10000_B0", "Set10000_B1")
+quick_df %>%
+  mutate_if(is.numeric, function(x) p.adjust(p = x, method = "BH")) %>%
+  arrange(Set10000_B1) %>%
+  head() %>% 
+  kable()
+```
