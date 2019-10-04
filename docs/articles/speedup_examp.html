@@ -133,7 +133,7 @@ run_pertest&lt;-<span class="cf">function</span>(<span class="dt">x.mat=</span>x
 <a href="#runtime-using-mclapply" class="anchor"></a>Runtime using mclapply</h3>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://rdrr.io/r/base/system.time.html">system.time</a></span>(run1 &lt;-<span class="st"> </span><span class="kw">run_pertest</span>(<span class="dt">x.mat=</span>xtx,<span class="dt">y=</span>ymat))</code></pre></div>
 <pre><code>##    user  system elapsed 
-##   8.458   5.133  23.278</code></pre>
+##   8.759   5.287  24.086</code></pre>
 </div>
 <div id="runtime-using-foreach" class="section level3">
 <h3 class="hasAnchor">
@@ -142,7 +142,7 @@ run_pertest&lt;-<span class="cf">function</span>(<span class="dt">x.mat=</span>x
 <span class="kw">registerDoParallel</span>(cl)
 <span class="kw"><a href="https://rdrr.io/r/base/system.time.html">system.time</a></span>(run2 &lt;-<span class="st"> </span><span class="kw"><a href="../reference/run_permtest_multicat.html">run_permtest_multicat</a></span>(<span class="dt">x.mat =</span> xtx, <span class="dt">y =</span> ymat, <span class="dt">columns =</span> <span class="dv">2</span><span class="op">:</span><span class="dv">3</span>, <span class="dt">split =</span> <span class="dv">101</span>, <span class="dt">num_perms =</span> <span class="dv">100</span>))</code></pre></div>
 <pre><code>##    user  system elapsed 
-##   4.767   0.388  19.647</code></pre>
+##   4.739   0.380  19.484</code></pre>
 </div>
 <div id="verifying-same-results" class="section level3">
 <h3 class="hasAnchor">
