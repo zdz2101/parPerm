@@ -8,16 +8,14 @@
 #' @return The desired permutation result
 #' 
 #' @examples
-#' #The following three lines of code are necessary for the parallel processing to work, can be changed to user's discretion but this is a known safe method.
-#' ###
-#' #cores <- detectCores()
-#' #cl <- makeCluster(cores[1]-1) #not to overload your computer
-#' #registerDoParallel(cl)
-#' ###
+#' \dontrun{
+#' cores <- detectCores()
+#' cl <- makeCluster(cores[1]-1) #not to overload your computer
+#' registerDoParallel(cl)
 #' 
-#' #a <- run_permtest(x.mat = xtx, y = ymat, columns = 1, split = 101, num_perms = 100)
-
-#how to package dependencies
+#' 
+#' a <- run_permtest(x.mat = xtx, y = ymat, columns = 1, split = 101, num_perms = 100)
+#' }
 
 run_permtest_multicat<-function(x.mat = xtx, y = ymat, columns = 2:3, split = 101, num_perms = 100){
   #Split the data into the number of pieces to address issues on a chunk based level, not necessary, but suggested

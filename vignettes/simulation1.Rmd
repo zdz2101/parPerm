@@ -1,8 +1,10 @@
 ---
-title: "Simulation1"
-author: "Zelos Zhu"
-date: "10/3/2019"
-output: html_document
+title: "Comparing FSL randomise vs parPerm"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Comparing randomise vs parPerm}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
 ---
 #Simulation 1:
  - Three-group permutation test
@@ -22,7 +24,7 @@ library(doParallel)
 library(knitr)
 ```
 
-```{Create Dataset}
+```{r Create Dataset}
 img.dim <- c(10,10,4)
 n <- 120
 set.seed(1)
@@ -36,12 +38,12 @@ lapply(1:80, function(x) mean(voxel_data_set1[4:5,4:5,3,x])) %>% unlist() %>% me
 lapply(81:120, function(x) mean(voxel_data_set1[4:5,4:5,3,x])) %>% unlist() %>% mean
 ```
 
-```{Using Randomise}
+```{r Using Randomise}
 #Look-up FSL implentation in R
 cov_mat_randomise <- rep(1:3, rep(40,3)) %>% as.factor 
 ```
 
-```{Using parPerm}
+```{r Using parPerm}
 cov_mat_parperm <- cbind(rep(c(0,1,0),c(40,40,40)), rep(c(0,0,1),c(40,40,40)))
 xtx <- xmat_trans(cov_mat_parperm)
 
