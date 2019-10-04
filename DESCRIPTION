@@ -1,6 +1,6 @@
 Package: parPerm
 Type: Package
-Title: How to perform permutation tests on predictor variales for to study outcomes of neuroimaging data
+Title: How to perform permutation tests on predictor variales to study outcomes of neuroimaging data
 Version: 0.1.0
 Authors@R: c(person("Zelos", "Zhu", email = "zdz2101@cumc.columbia.edu", role = c("aut", "cre")),
              person("Seonjoo","Lee", email = "sl3670@cumc.columbia.edu", role = c("aut")))
