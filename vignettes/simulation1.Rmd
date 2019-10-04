@@ -22,6 +22,7 @@ library(tidyverse)
 library(parPerm)
 library(doParallel)
 library(knitr)
+library(oro.nifti)
 ```
 
 ```{r Create Dataset}
@@ -37,6 +38,10 @@ voxel_data_set1[4:5,4:5,3,81:120] <- voxel_data_set1[4:5,4:5,3,81:120] + 0.8
 #Show the means have actually changed
 lapply(1:80, function(x) mean(voxel_data_set1[4:5,4:5,3,x])) %>% unlist() %>% mean
 lapply(81:120, function(x) mean(voxel_data_set1[4:5,4:5,3,x])) %>% unlist() %>% mean
+
+#Create the nifti file
+simulation_nifti <- nifti(voxel_data_set1, dim = c(10, 10, 4, 120))
+#writeNIfTI(simulation_nifti, "simulation1_data")
 ```
 
 ```{r Using Randomise}
@@ -48,13 +53,14 @@ cov_mat_randomise <- rep(1:3, rep(40,3)) %>% as.factor
 cov_mat_parperm <- cbind(rep(c(0,1,0),c(40,40,40)), rep(c(0,0,1),c(40,40,40)))
 xtx <- xmat_trans(cov_mat_parperm)
 
-#Dataset1
-ymat_set1 <- array(voxel_data_set1, dim=c(400,120))
+#Dataset1 -- show functions from parPerm work
+ymat_set1 <- ymat_trans(simulation_nifti)
 cores <- detectCores()
 cl <- makeCluster(cores[1]-1)
 registerDoParallel(cl)
 result_1000_set1 <- run_permtest_multicat(x.mat = xtx, y = ymat_set1, columns = 1:2, split = 2, num_perms = 1000)
-system.time(result_10000_set1) <- run_permtest_multicat(x.mat = xtx, y = ymat_set1, columns = 1:2, split = 2, num_perms = 10000)
+result_10000_set1 <- run_permtest_multicat(x.mat = xtx, y = ymat_set1, columns = 1:2, split = 2, num_perms = 10000)
+system.time(run_permtest_multicat(x.mat = xtx, y = ymat_set1, columns = 1:2, split = 2, num_perms = 10000))
 
 quick_df <- cbind(result_1000_set1, result_10000_set1) %>% as.data.frame()
 names(quick_df) <- c("Set1000_B0", "Set1000_B1", "Set10000_B0", "Set10000_B1")
