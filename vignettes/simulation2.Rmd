@@ -1,0 +1,90 @@
+---
+title: "parPerm for interaction effects"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Interaction effects using permutation testing}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+#Simulation 2:
+ - Three-group permutation test
+ - n=120 (40 per group)
+ - Number of voxels: 10 x 10 x 4
+ - Significant area size: 2 x 2 x 1
+ - Multiple comparison correction (p.adjust, method=BH)
+ - Report false discovery rates. 
+ - Factor 1: txt, Factor2: sex
+ - Only interaction size of d=0.8
+(e.g. generate 4 groups, 30 per groups, and only one group will have higher average)
+
+
+```{r, include = FALSE}
+library(tidyverse)
+library(parPerm)
+library(doParallel)
+library(knitr)
+library(oro.nifti)
+```
+
+```{r Create Dataset}
+img.dim <- c(10,10,4)
+n <- 120
+set.seed(1)
+voxel_data <- array(rnorm(prod(img.dim)*n),dim=c(img.dim,n))
+
+#Create dataset with effect size (0, 0, 0.8)
+voxel_data_set1 <- voxel_data
+voxel_data_set1[4:5,4:5,3,91:120] <- voxel_data_set1[4:5,4:5,3,91:120] + 1.3
+
+#Show the means have actually changed
+lapply(1:90, function(x) mean(voxel_data_set1[4:5,4:5,3,x])) %>% unlist() %>% mean
+lapply(91:120, function(x) mean(voxel_data_set1[4:5,4:5,3,x])) %>% unlist() %>% mean
+
+#Create the nifti file
+simulation_nifti <- nifti(voxel_data_set1, dim = c(10, 10, 4, 120))
+#writeNIfTI(simulation_nifti, "simulation2_data")
+```
+
+```{r}
+cov_mat_parperm <- cbind(rep(c(0,1),c(60,60)), rep(c(0,1,0,1),c(30,30,30,30)))
+
+#Set1 -- where first column x = 0
+xtx_1 <- xmat_trans(cov_mat_parperm[1:60,-1])
+ymat_set1 <- ymat_trans(simulation_nifti)[,1:60]
+cores <- detectCores()
+cl <- makeCluster(cores[1]-1)
+registerDoParallel(cl)
+
+#miswrote the single column version
+result_set1 <- run_permtest(x.mat = xtx_1, y = ymat_set1, columns = 1, split = 2, num_perms = 10000)
+
+result_set1 %>% 
+  as.data.frame()%>%
+  mutate_if(is.numeric, function(x) p.adjust(p = x, method = "BH")) %>%
+  arrange(V1) %>%
+  head() %>% 
+  kable()
+```
+
+```{r}
+#Set2 -- where first column x = 1
+xtx_2 <- xmat_trans(cov_mat_parperm[61:120,-1])
+ymat_set2 <- ymat_trans(simulation_nifti)[,61:120]
+cores <- detectCores()
+cl <- makeCluster(cores[1]-1)
+registerDoParallel(cl)
+
+#miswrote the single column version
+result_set2 <- run_permtest(x.mat = xtx_2, y = ymat_set2, columns = 1, split = 2, num_perms = 10000)
+
+result_set2 %>% 
+  as.data.frame()%>%
+  mutate_if(is.numeric, function(x) p.adjust(p = x, method = "BH")) %>%
+  arrange(V1) %>%
+  head() %>% 
+  kable()
+```
+
+Even parsing it out, doesn't quite seem to isolate the effect when effect size is 0.8. 
+
+Suggesting if we up the effect size it might parse it out. Using 1.3 it starts to show. 

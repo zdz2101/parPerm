@@ -3,5 +3,6 @@ pkgdown: 1.4.1
 pkgdown_sha: ~
 articles:
   simulation1: simulation1.html
+  simulation2: simulation2.html
   speedup_examp: speedup_examp.html
 

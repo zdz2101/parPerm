@@ -24,7 +24,7 @@ run_permtest <-function(x.mat = xtx, y = ymat, columns = 1, split = 101, num_per
   }
   
   #Split the data into the number of pieces to address issues on a chunk based level, not necessary, but suggested
-  vindx = rep(1:split, each = floor(nrow(ymat)/(split - 1)))[1:nrow(ymat)]
+  vindx = rep(1:split, each = floor(nrow(y)/(split - 1)))[1:nrow(y)]
   
   #Define bhat for the particular characteristic: sex, trt/ctl, age, bmi
   bhat = y %*% x.mat[,columns]
@@ -39,7 +39,7 @@ run_permtest <-function(x.mat = xtx, y = ymat, columns = 1, split = 101, num_per
     }
     
     aa1 = do.call(rbind, lapply(perm_stack,function(x)x[,1]))
-    ps1 = apply(rbind(bhat[vindx==i,1], aa1),2, function(x)sum( x[-1]> abs(x[1]) |  x[-1]< (-1*abs(x[1])) ))/100
+    ps1 = apply(rbind(bhat[vindx==i,1], aa1),2, function(x)sum( x[-1]> abs(x[1]) |  x[-1]< (-1*abs(x[1])) ))/num_perms
 
     rr1_piece = cbind(unlist(ps1))
     rr1_piece
