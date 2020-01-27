@@ -1,0 +1,101 @@
+---
+title: "parPerm for new simulations"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Interaction effects using permutation testing}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+```{r, include = FALSE}
+library(tidyverse)
+library(parPerm)
+library(doParallel)
+library(knitr)
+library(oro.nifti)
+```
+
+#Simulation 2:
+```{r Create Dataset Simulation 1}
+img.dim <- c(30,30,20)
+n <- 50*4
+set.seed(1)
+
+voxel_data <- array(rnorm(prod(img.dim)*n),dim=c(img.dim,n))
+sig_voxels <- array(1:prod(img.dim),dim=c(img.dim))[10:12,10:12,10:12] %>% cbind %>% as.numeric()
+#things to append/use iteratively
+effect_size <- c(0.5, 0.8, 1)
+
+sim_list_stratified1 <- vector("list", 3)
+sim_list_stratified2 <- vector("list", 3)
+sim_list_wrongone <- vector("list", 3)
+sim_list_justy <- vector("list", 3)
+
+#fixed things
+cov_mat_parperm <- cbind(rep(c(0,1),c(100,100)), rep(c(0,1,0,1),c(50,50,50,50)))
+cov_mat_parperm2 <- apply(cov_mat_parperm[,1:2],1,prod)
+
+for(i in 1:length(effect_size)){
+  voxel_data_set_i <- voxel_data
+  voxel_data_set_i[10:12, 10:12, 10:12,151:200] <- voxel_data_set_i[10:12, 10:12, 10:12,151:200] + effect_size[i]
+  simulation_nifti <- nifti(voxel_data_set_i, dim = c(30, 30, 20, 200))
+  
+  #stratified
+  xmat_set <- xmat_trans(cbind(cov_mat_parperm, cov_mat_parperm2))[1:100,]
+  xmat_set2 <- xmat_trans(cbind(cov_mat_parperm, cov_mat_parperm2))[101:200,]
+  ymat_set <- ymat_trans(simulation_nifti)[,1:100]
+  ymat_set2 <- ymat_trans(simulation_nifti)[,101:200]
+  
+  #wrongset
+  xmat_wrongset <- xmat_trans(cbind(cov_mat_parperm, cov_mat_parperm2))
+  ymat_wrongset <- ymat_trans(simulation_nifti)
+  
+  #justy
+  xmat_justy <- xmat_trans(cbind(cov_mat_parperm, cov_mat_parperm2))
+  ymat_justy <- ymat_trans(simulation_nifti)
+  
+  cores <- detectCores()
+  cl <- makeCluster(cores[1]-1)
+  registerDoParallel(cl)
+  
+  result_set <- run_permtest(x.mat = xmat_set, y = ymat_set, columns = 3, split = 10, num_perms = 5000)
+  result_set2 <- run_permtest(x.mat = xmat_set2, y = ymat_set2, columns = 3, split = 10, num_perms = 5000)
+
+  result_wrongset <- run_permtest(x.mat = xmat_wrongset, y = ymat_wrongset, columns = 3, split = 10, num_perms = 5000)
+  
+  result_justy <- run_permtest_justy(x.mat = xmat_justy, y = ymat_justy, columns = 1:3, split = 10, num_perms = 5000)
+
+  
+  sim_list_stratified1[[i]] <- result_set %>% 
+    as.data.frame()%>%
+    mutate_if(is.numeric, function(x) p.adjust(p = x, method = "BH")) 
+  
+  sim_list_stratified2[[i]] <- result_set2 %>% 
+    as.data.frame()%>%
+    mutate_if(is.numeric, function(x) p.adjust(p = x, method = "BH")) 
+  
+  sim_list_wrongone[[i]] <- result_wrongset %>%
+    as.data.frame()%>%
+    mutate_if(is.numeric, function(x) p.adjust(p = x, method = "BH"))
+
+  sim_list_justy[[i]] <- result_justy %>%
+    as.data.frame()%>%
+    mutate_if(is.numeric, function(x) p.adjust(p = x, method = "BH"))
+}
+
+ifelse(sim_list_stratified1[[1]][,1] <= 0.05, "False Positive", "True Negative") %>% table()
+ifelse(sim_list_stratified1[[2]][,1] <= 0.05, "False Positive", "True Negative") %>% table()
+ifelse(sim_list_stratified1[[3]][,1] <= 0.05, "False Positive", "True Negative") %>% table()
+
+c(ifelse(sim_list_stratified2[[1]][sig_voxels,1] <= 0.05, "True Positive", "False Negative"),ifelse(sim_list_stratified2[[1]][-sig_voxels,1] <= 0.05, "False Positive", "True Negative")) %>% table()
+c(ifelse(sim_list_stratified2[[2]][sig_voxels,1] <= 0.05, "True Positive", "False Negative"),ifelse(sim_list_stratified2[[2]][-sig_voxels,1] <= 0.05, "False Positive", "True Negative")) %>% table()
+c(ifelse(sim_list_stratified2[[3]][sig_voxels,1] <= 0.05, "True Positive", "False Negative"),ifelse(sim_list_stratified2[[3]][-sig_voxels,1] <= 0.05, "False Positive", "True Negative")) %>% table()
+
+
+c(ifelse(sim_list_wrongone[[1]][sig_voxels,1] <= 0.05, "True Positive", "False Negative"),ifelse(sim_list_wrongone[[1]][-sig_voxels,1] <= 0.05, "False Positive", "True Negative")) %>% table()
+c(ifelse(sim_list_wrongone[[2]][sig_voxels,1] <= 0.05, "True Positive", "False Negative"),ifelse(sim_list_wrongone[[2]][-sig_voxels,1] <= 0.05, "False Positive", "True Negative")) %>% table()
+c(ifelse(sim_list_wrongone[[3]][sig_voxels,1] <= 0.05, "True Positive", "False Negative"),ifelse(sim_list_wrongone[[3]][-sig_voxels,1] <= 0.05, "False Positive", "True Negative")) %>% table()
+
+c(ifelse(sim_list_justy[[1]][sig_voxels,3] <= 0.05, "True Positive", "False Negative"),ifelse(sim_list_justy[[1]][-sig_voxels,3] <= 0.05, "False Positive", "True Negative")) %>% table()
+c(ifelse(sim_list_justy[[2]][sig_voxels,3] <= 0.05, "True Positive", "False Negative"),ifelse(sim_list_justy[[2]][-sig_voxels,3] <= 0.05, "False Positive", "True Negative")) %>% table()
+c(ifelse(sim_list_justy[[3]][sig_voxels,3] <= 0.05, "True Positive", "False Negative"),ifelse(sim_list_justy[[3]][-sig_voxels,3] <= 0.05, "False Positive", "True Negative")) %>% table()
+```

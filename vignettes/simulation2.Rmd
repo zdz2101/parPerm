@@ -88,3 +88,98 @@ result_set2 %>%
 Even parsing it out, doesn't quite seem to isolate the effect when effect size is 0.8. 
 
 Suggesting if we up the effect size it might parse it out. Using 1.3 it starts to show. 
+
+
+#Changing Effect Sizes
+```{r, echo = FALSE}
+#things to append/use iteratively
+effect_size <- (5:15)/10
+p_list <- vector("list")
+
+#fixed things
+img.dim <- c(10,10,4)
+n <- 120
+set.seed(1)
+voxel_data <- array(rnorm(prod(img.dim)*n),dim=c(img.dim,n))
+cov_mat_parperm <- cbind(rep(c(0,1),c(60,60)), rep(c(0,1,0,1),c(30,30,30,30)))
+xtx <- xmat_trans(cov_mat_parperm[61:120,-1])
+
+for(i in 1:length(effect_size)){
+  voxel_data_set_i <- voxel_data
+  voxel_data_set_i[4:5, 4:5, 2:3,91:120] <- voxel_data_set_i[4:5, 4:5, 2:3, 91:120] + effect_size[i]
+  simulation_nifti <- nifti(voxel_data_set_i, dim = c(10, 10, 4, 120))
+  ymat_set <- ymat_trans(simulation_nifti)[,61:120]
+  cores <- detectCores()
+  cl <- makeCluster(cores[1]-1)
+  registerDoParallel(cl)
+  
+  #miswrote the single column version
+  result_set <- run_permtest(x.mat = xtx, y = ymat_set, columns = 1, split = 10, num_perms = 50000)
+  
+  p_list[[i]] <- result_set %>% 
+    as.data.frame()%>%
+    mutate_if(is.numeric, function(x) p.adjust(p = x, method = "BH")) 
+}
+p_list %>% 
+  lapply(., function(x) mutate(x, voxel = 1:400)) %>%
+  bind_rows() %>%
+  as.data.frame() %>%
+  mutate(effect_size = rep(effect_size[1:8], each=400),
+         voxel = factor(voxel)) %>%
+  dplyr::filter(voxel %in% c(134, 135, 144, 145, 234, 235, 244, 245) | V1 <= 0.05) %>%
+  mutate(real_diff = ifelse(voxel %in% c(134, 135, 144, 145, 234, 235, 244, 245), "real", "FP")) %>%
+  ggplot(aes(x = effect_size, y = V1, col = voxel, group = voxel)) + 
+  geom_line(aes(linetype = real_diff))+
+  ylab("P-Value") +
+  xlab("Effect Size")+
+  ggtitle("Fixed Sample Size of 30 per subgroup")
+```
+
+#Changing Sample Sizes
+```{r, echo = FALSE}
+#things to append/use iteratively
+sample_size <- seq(30,80,5)
+p_list2 <- vector("list")
+
+#fixed things
+img.dim <- c(10,10,4)
+
+
+for(i in 1:length(sample_size)){
+  n <- sample_size[i]*4
+  sub_n <- sample_size[i]
+  set.seed(i)
+  voxel_data <- array(rnorm(prod(img.dim)*n),dim=c(img.dim,n))
+  cov_mat_parperm <- cbind(rep(c(0,1),c(sub_n*2,sub_n*2)), rep(c(0,1,0,1),rep(sub_n,4)))
+  xtx <- xmat_trans(cov_mat_parperm[(n/2 + 1):n,-1])
+  voxel_data_set_i <- voxel_data
+  voxel_data_set_i[4:5, 4:5, 2:3, (n-sub_n + 1):n] <- voxel_data_set_i[4:5, 4:5, 2:3, (n-sub_n + 1):n] + 1.0
+  simulation_nifti <- nifti(voxel_data_set_i, dim = c(10, 10, 4, n))
+  ymat_set <- ymat_trans(simulation_nifti)[,(n/2 + 1):n]
+  
+  
+  cores <- detectCores()
+  cl <- makeCluster(cores[1]-1)
+  registerDoParallel(cl)
+  
+  result_set <- run_permtest(x.mat = xtx, y = ymat_set, columns = 1, split = 2, num_perms = 20000)
+  
+  p_list2[[i]] <- result_set %>% 
+     as.data.frame()%>%
+     mutate_if(is.numeric, function(x) p.adjust(p = x, method = "BH")) 
+}
+
+p_list2 %>% 
+  lapply(., function(x) mutate(x, voxel = 1:400)) %>%
+  bind_rows() %>%
+  as.data.frame() %>%
+  mutate(sample_size = rep(sample_size, each=400),
+         voxel = factor(voxel)) %>%
+  dplyr::filter(voxel %in% c(134, 135, 144, 145, 234, 235, 244, 245) | V1 <= 0.05) %>%
+  mutate(real_diff = ifelse(voxel %in% c(134, 135, 144, 145, 234, 235, 244, 245), "real", "FP")) %>%
+  ggplot(aes(x = sample_size, y = V1, col = voxel, group = voxel)) + 
+  geom_line(aes(linetype = real_diff)) + 
+  ylab("P-Value") +
+  xlab("Sample Size")+
+  ggtitle("Fixed Effect Size of 1.0")
+```
