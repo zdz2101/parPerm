@@ -4,8 +4,7 @@
 \alias{run_permtest}
 \title{Run permutation test using parallel processing}
 \usage{
-run_permtest(x.mat = xtx, y = ymat, columns = 1, split = 101,
-  num_perms = 100)
+run_permtest(x.mat = xtx, y = ymat, columns = 1, split = 101, num_perms = 100)
 }
 \arguments{
 \item{x.mat}{The desired x matrix that contains all the characteristics data/predictor variables; the matrix should contain the desired column user intends completing the permutation on.}
@@ -25,9 +24,11 @@ The desired permutation result
 Run permutation test using parallel processing
 }
 \examples{
-#cores <- detectCores()
-#cl <- makeCluster(cores[1]-1) #not to overload your computer
-#registerDoParallel(cl)
+\dontrun{
+cores <- detectCores()
+cl <- makeCluster(cores[1]-1) #not to overload your computer
+registerDoParallel(cl)
 
-#a <- run_permtest(x.mat = xtx, y = ymat, columns = 1, split = 101, num_perms = 100)
+a <- run_permtest(x.mat = xtx, y = ymat, columns = 1, split = 101, num_perms = 100)
+}
 }

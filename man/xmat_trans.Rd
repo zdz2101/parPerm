@@ -16,6 +16,8 @@ The x-matrix multiplication we desire
 Preprocess x matrix data
 }
 \examples{
-#xmat <- read_excel('VMB Variables.xlsx',skip=1)
-#xtx <- xmat_trans(xmat)
+\dontrun{
+xmat <- read_excel('VMB Variables.xlsx',skip=1)
+xtx <- xmat_trans(xmat)
+}
 }

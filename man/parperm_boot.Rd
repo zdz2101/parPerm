@@ -4,8 +4,14 @@
 \alias{parperm_boot}
 \title{Bootstrapping using parPerm}
 \usage{
-parperm_boot(x.mat.boot = xtx, y.boot = ymat, columns.boot = 2:3,
-  split.boot = 101, num_perms.boot = 5, boots = 5)
+parperm_boot(
+  x.mat.boot = xtx,
+  y.boot = ymat,
+  columns.boot = 2:3,
+  split.boot = 101,
+  num_perms.boot = 5,
+  boots = 5
+)
 }
 \arguments{
 \item{boots}{Number of desired bootstraps}
@@ -27,11 +33,13 @@ The desired results post-bootstrap
 Bootstrapping using parPerm
 }
 \examples{
-#library(parallel)
-#lirary(doparallel)
-#library(parPerm)
-#cores <- detectCores()
-#cl <- makeCluster(cores[1]-1) #not to overload your computer
-#registerDoParallel(cl)
-#boooooot <- parperm_boot(x.mat.boot = xtx, y.boot = ymat, columns.boot = 2:3, split.boot = 101, num_perms.boot = 5, boots = 5)
+\dontrun{
+library(parallel)
+lirary(doparallel)
+library(parPerm)
+cores <- detectCores()
+cl <- makeCluster(cores[1]-1) #not to overload your computer
+registerDoParallel(cl)
+boooooot <- parperm_boot(x.mat.boot = xtx, y.boot = ymat, columns.boot = 2:3, split.boot = 101, num_perms.boot = 5, boots = 5)
+}
 }

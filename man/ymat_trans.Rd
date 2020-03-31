@@ -16,5 +16,7 @@ A processed matrix ready for permutation test analysis
 Preprocess y matrix data, while double checking all data is nifti
 }
 \examples{
-# ymat <- ymat_trans(neurodat)
+\dontrun{
+ ymat <- ymat_trans(neurodat)
+ }
 }
