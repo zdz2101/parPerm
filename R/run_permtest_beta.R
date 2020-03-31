@@ -30,9 +30,9 @@ run_permtest_beta <-function(x.mat = x, y = ymat, columns = 1, split = 101, num_
   xtx = xmat_trans(x.mat)
   bhat = (y %*% xtx)[,columns]
   
-  rr1 <- foreach(i = 1:split, .combine = rbind,.packages=c("foreach", "parPerm","doParallel")) %dopar%{
+  rr1 <- foreach(i = 1:split, .combine = rbind,.packages=c("foreach", "parPerm", "doParallel")) %dopar%{
     #num_perm - how many seeds
-    perm_stack = foreach(j = 1:num_perms, .packages=c("foreach", "parPerm","doParallel")) %do% {
+    perm_stack = foreach(j = 1:num_perms, .packages=c("foreach", "parPerm", "doParallel")) %do% {
       set.seed(j)
       n1 = 1:100
       n2 = 101:200

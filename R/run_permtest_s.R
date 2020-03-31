@@ -29,9 +29,9 @@ run_permtest <-function(x.mat = xtx, y = ymat, columns = 1, split = 101, num_per
   #Define bhat for the particular characteristic: sex, trt/ctl, age, bmi
   bhat = y %*% x.mat[,columns]
   
-  rr1 <- foreach(i = 1:split, .combine = rbind, .packages="foreach") %dopar%{
+  rr1 <- foreach(i = 1:split, .combine = rbind, .packages=c("foreach", "parPerm", "doParallel")) %dopar%{
     #num_perm - how many seeds
-    perm_stack = foreach(j = 1:num_perms, .packages="foreach") %do% {
+    perm_stack = foreach(j = 1:num_perms, .packages=c("foreach", "parPerm", "doParallel")) %do% {
       set.seed(j)
       n = nrow(x.mat)
       indx = sample(n,n,replace=FALSE)
