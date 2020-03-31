@@ -36,8 +36,8 @@ run_permtest_beta <-function(x.mat = x, y = ymat, columns = 1, split = 101, num_
       set.seed(j)
       n1 = 1:100
       n2 = 101:200
-      indx_1 = sample(n1,n,replace=FALSE)
-      indx_2 = sample(n,n,replace=FALSE)
+      indx_1 = sample(n1,length(n1),replace=FALSE)
+      indx_2 = sample(n2,length(n2),replace=FALSE)
       perms = (y[vindx==i,] %*% xmat_trans(x.mat[c(indx_1,indx_2),]))[,columns]
     }
     
