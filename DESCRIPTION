@@ -15,7 +15,6 @@ RoxygenNote: 7.0.2
 Imports:
   parallel,
   oro.nifti,
-  slmisc,
   psych,
   parallel,
   doParallel,
@@ -24,7 +23,6 @@ Imports:
   knitr,
   MASS
 Suggests: 
-  tidyverse,
   readxl,
   rmarkdown
 VignetteBuilder: knitr
