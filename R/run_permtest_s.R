@@ -42,7 +42,7 @@ run_permtest <-function(x.mat = x, y = ymat, columns = 1, split = 101, num_perms
     }
     
     aa1 = do.call(rbind, lapply(perm_stack,function(x)x[,1]))
-    ps1 = apply(rbind(bhat[vindx==i,1], aa1),2, function(x)sum( x[-1]> abs(x[1]) |  x[-1]< (-1*abs(x[1])) ))/num_perms
+    ps1 = apply(rbind(bhat[vindx==i], aa1),2, function(x)sum( x[-1]> abs(x[1]) |  x[-1]< (-1*abs(x[1])) ))/num_perms
 
     rr1_piece = cbind(unlist(ps1))
     rr1_piece
