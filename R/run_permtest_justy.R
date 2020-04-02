@@ -23,7 +23,7 @@ run_permtest_justy <- function(x.mat = x, y = ymat, columns = 2:3, split = 101, 
   
   #Define bhat for the particular characteristic: sex, trt/ctl, age, bmi
   xtx = xmat_trans(x.mat)
-  bhat = y %*% x.mat[,columns]
+  bhat = (y %*% x.mat)[,columns]
   
   rr1 <- foreach(i = 1:split, .combine = rbind,.packages=c("foreach", "parPerm", "doParallel")) %dopar%{
     perm_stack = foreach(j = 1:num_perms, .packages=c("foreach", "parPerm", "doParallel")) %dopar% {
