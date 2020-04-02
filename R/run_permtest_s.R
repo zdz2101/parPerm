@@ -31,11 +31,13 @@ run_permtest <-function(x.mat = xtx, y = ymat, columns = 1, split = 101, num_per
   
   rr1 <- foreach(i = 1:split, .combine = rbind, .packages=c("foreach", "parPerm", "doParallel")) %dopar%{
     #num_perm - how many seeds
-    perm_stack = foreach(j = 1:num_perms, .packages=c("foreach", "parPerm", "doParallel")) %do% {
+    perm_stack = foreach(j = 1:num_perms, .packages=c("foreach", "parPerm", "doParallel")) %dopar% {
       set.seed(j)
       n = nrow(x.mat)
       indx = sample(n,n,replace=FALSE)
-      perms = y[vindx==i,] %*% x.mat[indx, columns]
+      x.mat2 = x.mat
+      x.mat2[,columns] = x.mat2[indx, columns]
+      perms = (y[vindx==i,] %*% xmat_trans(x.mat2))[,columns]
     }
     
     aa1 = do.call(rbind, lapply(perm_stack,function(x)x[,1]))

@@ -25,11 +25,11 @@ run_permtest_justy <- function(x.mat = xtx, y = ymat, columns = 2:3, split = 101
   bhat = y %*% x.mat[,columns]
   
   rr1 <- foreach(i = 1:split, .combine = rbind,.packages=c("foreach", "parPerm", "doParallel")) %dopar%{
-    perm_stack = foreach(j = 1:num_perms, .packages=c("foreach", "parPerm", "doParallel")) %do% {
+    perm_stack = foreach(j = 1:num_perms, .packages=c("foreach", "parPerm", "doParallel")) %dopar% {
       set.seed(j)
       n = nrow(x.mat)
       indx = sample(n,n,replace=FALSE)
-      perms = y[vindx==i,indx] %*% x.mat[, columns]
+      perms = (y[vindx==i,indx] %*% x.mat)[,columns]
     }
     
     #------ THIS DEFINITELY WORKS ------

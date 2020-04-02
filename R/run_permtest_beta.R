@@ -14,10 +14,10 @@
 #' registerDoParallel(cl)
 #' 
 #' 
-#' a <- run_permtest(x.mat = xtx, y = ymat, columns = 1, split = 101, num_perms = 100)
+#' a <- run_permtest_interaction(x.mat = xtx, y = ymat, columns = 1, split = 101, num_perms = 100)
 #' }
 
-run_permtest_beta <-function(x.mat = x, y = ymat, columns = 1, split = 101, num_perms = 100){
+run_permtest_interaction <-function(x.mat = x, y = ymat, columns = 1, split = 101, num_perms = 100, m1 = 100, m2 = 100){
   
   if(length(columns) != 1){
     return("Use rum_permtest_multicat for predictors with multiple categories")
@@ -32,10 +32,10 @@ run_permtest_beta <-function(x.mat = x, y = ymat, columns = 1, split = 101, num_
   
   rr1 <- foreach(i = 1:split, .combine = rbind,.packages=c("foreach", "parPerm", "doParallel")) %dopar%{
     #num_perm - how many seeds
-    perm_stack = foreach(j = 1:num_perms, .packages=c("foreach", "parPerm", "doParallel")) %do% {
+    perm_stack = foreach(j = 1:num_perms, .packages=c("foreach", "parPerm", "doParallel")) %dopar% {
       set.seed(j)
-      n1 = 1:100
-      n2 = 101:200
+      n1 = 1:m1
+      n2 = (1:m2) + m1
       indx_1 = sample(n1,length(n1),replace=FALSE)
       indx_2 = sample(n2,length(n2),replace=FALSE)
       x.mat2 = x.mat
