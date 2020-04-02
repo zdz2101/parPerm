@@ -17,7 +17,7 @@
 #' }
 
 
-run_permtest <-function(x.mat = xtx, y = ymat, columns = 1, split = 101, num_perms = 100){
+run_permtest <-function(x.mat = x, y = ymat, columns = 1, split = 101, num_perms = 100){
 
   if(length(columns) != 1){
     return("Use rum_permtest_multicat for predictors with multiple categories")
@@ -27,7 +27,8 @@ run_permtest <-function(x.mat = xtx, y = ymat, columns = 1, split = 101, num_per
   vindx = rep(1:split, each = floor(nrow(y)/(split - 1)))[1:nrow(y)]
   
   #Define bhat for the particular characteristic: sex, trt/ctl, age, bmi
-  bhat = y %*% x.mat[,columns]
+  xtx = xmat_trans(x.mat)
+  bhat = (y %*% xtx)[,columns]
   
   rr1 <- foreach(i = 1:split, .combine = rbind, .packages=c("foreach", "parPerm", "doParallel")) %dopar%{
     #num_perm - how many seeds
