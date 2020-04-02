@@ -17,11 +17,12 @@
 #' }
 
 
-run_permtest_justy <- function(x.mat = xtx, y = ymat, columns = 2:3, split = 101, num_perms = 100){
+run_permtest_justy <- function(x.mat = x, y = ymat, columns = 2:3, split = 101, num_perms = 100){
   #Split the data into the number of pieces to address issues on a chunk based level, not necessary, but suggested
   vindx = rep(1:split, each = floor(nrow(y)/(split - 1)))[1:nrow(y)]
   
   #Define bhat for the particular characteristic: sex, trt/ctl, age, bmi
+  xtx = xmat_trans(x.mat)
   bhat = y %*% x.mat[,columns]
   
   rr1 <- foreach(i = 1:split, .combine = rbind,.packages=c("foreach", "parPerm", "doParallel")) %dopar%{
@@ -29,19 +30,8 @@ run_permtest_justy <- function(x.mat = xtx, y = ymat, columns = 2:3, split = 101
       set.seed(j)
       n = nrow(x.mat)
       indx = sample(n,n,replace=FALSE)
-      perms = (y[vindx==i,indx] %*% x.mat)[,columns]
+      perms = (y[vindx==i,indx] %*% xtx)[,columns]
     }
-    
-    #------ THIS DEFINITELY WORKS ------
-    # aa1 = do.call(rbind, lapply(perm_stack, function(x)x[,1]))
-    # ps1 = apply(rbind(bhat[vindx==i,1], aa1),2, function(x)sum( x[-1]> abs(x[1]) |  x[-1]< (-1*abs(x[1])) ))/num_perms
-    # 
-    # aa2 = do.call(rbind, lapply(perm_stack, function(x)x[,2]))
-    # ps2 = apply(rbind(bhat[vindx==i,2], aa2),2, function(x)sum( x[-1]> abs(x[1]) |  x[-1]< (-1*abs(x[1])) ))/num_perms
-    # 
-    # rr1_piece = cbind(unlist(ps1),unlist(ps2))
-    # rr1_piece
-    #-----------------------------------
     
     rr1_piece <- foreach(k = 1:length(columns), .combine = cbind, .packages = "foreach") %do% {
       aa_k <- do.call(rbind, lapply(perm_stack, function(x)x[,k]))
